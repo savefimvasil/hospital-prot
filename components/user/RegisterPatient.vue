@@ -1,0 +1,130 @@
+<template>
+  <v-form v-model="valid">
+    <h2>Реєстрація пацієнта</h2>
+    <v-text-field
+        v-model="firstName"
+        :rules="nameRules"
+        label="Ім'я"
+        required
+      />
+      <v-text-field
+        v-model="secondName"
+        :rules="nameRules"
+        label="Прізвище"
+        required
+      />
+      <v-menu
+        ref="menu1"
+        v-model="menu1"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        lazy
+        transition="scale-transition"
+        offset-y
+        full-width
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="dateFormatted"
+            label="День Народження"
+            persistent-hint
+            prepend-icon="event"
+            @blur="date = parseDate(dateFormatted)"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
+      </v-menu>
+      <v-text-field
+        v-model="email"
+        :rules="emailRules"
+        label="Електрона адреса"
+        required
+      />
+      <v-text-field
+        v-model="password"
+        :rules="passwordRules"
+        label="Пароль"
+        type="password"
+        required
+      />
+      <v-text-field
+        v-model="confirmPassword"
+        :rules="confirmPasswordRules"
+        label="Повторіть пароль"
+        type="password"
+        required
+      />
+      <v-btn :disabled="!valid" color="info" :justify-end="true" @click="registerUser">Зареєструватися</v-btn>
+      <nuxt-link to="/">Увійти</nuxt-link>
+  </v-form>
+</template>
+
+<script>
+  export default {
+    name: "RegisterPatient",
+    data(vm) {
+      return {
+        valid: false,
+        firstName: '',
+        secondName: '',
+        nameRules: [
+          v => !!v || 'Це поле не повинно бути пустим',
+          v => v.length >= 2 || 'Введіть коректне значення',
+          v => v.length <= 12 || 'Введіть коректне значення'
+        ],
+        date: new Date().toISOString().substr(0, 10),
+        dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+        password: '',
+        passwordRules: [
+          v => !!v || 'Пароль не повинен бути пустим',
+          v => v.length >= 8 || 'Пароль повинен складатися більш ніж з 8 символів',
+          v => v.length <= 16 || 'Пароль повинен складатися менш ніж з 18 символів'
+        ],
+        confirmPassword: '',
+        confirmPasswordRules: [
+          v => !!v || 'Пароль не повинен бути пустим',
+          v => v === this.password || 'Паролі повинні співпадати',
+        ],
+        email: '',
+        emailRules: [
+          v => !!v || 'Електрона адреса не повинна бути пустою',
+          v => /.+@.+/.test(v) || 'Не вірний формат Електроної адреси'
+        ]
+      }
+    },
+    computed: {
+      computedDateFormatted () {
+        return this.formatDate(this.date)
+      }
+    },
+
+    watch: {
+      date (val) {
+        this.dateFormatted = this.formatDate(this.date)
+      }
+    },
+    methods: {
+      formatDate (date) {
+        if (!date) return null
+
+        const [year, month, day] = date.split('-')
+        return `${month}/${day}/${year}`
+      },
+      parseDate (date) {
+        if (!date) return null
+
+        const [month, day, year] = date.split('/')
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+      },
+      registerUser() {
+        this.$router.push('/')
+      }
+    }
+  }
+</script>
+
+<style scoped>
+</style>
