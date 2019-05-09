@@ -8,17 +8,40 @@
       app
     >
       <v-list>
+
+        <!--<v-list-tile-->
+          <!--v-for="(item, i) in items"-->
+          <!--:key="i"-->
+          <!--:to="item.to"-->
+          <!--router-->
+          <!--exact-->
+        <!--&gt;-->
+          <!--<v-list-tile-content>-->
+            <!--<v-list-tile-title v-text="item.title" />-->
+          <!--</v-list-tile-content>-->
+        <!--</v-list-tile>-->
+
         <v-list-tile
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title" />
-          </v-list-tile-content>
-        </v-list-tile>
+        v-if="!user"
+        to="/login"
+        router
+        exact
+      >
+        <v-list-tile-content>
+          <v-list-tile-title v-text="'Увійти'" />
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile
+        v-else
+        @click="logout"
+        router
+        exact
+      >
+        <v-list-tile-content>
+          <v-list-tile-title v-text="'Вийти'" />
+        </v-list-tile-content>
+      </v-list-tile>
+
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
@@ -45,27 +68,38 @@
 
 <script>
 export default {
+  computed: {
+    user() {
+      return this.$store.state.user.user
+    }
+  },
   data() {
     return {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: 'apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'bubble_chart',
-          title: 'Inspire',
-          to: '/inspire'
-        }
-      ],
+      // items: [
+      //   {
+      //     icon: 'apps',
+      //     title: 'Welcome',
+      //     to: '/'
+      //   },
+      //   {
+      //     icon: 'bubble_chart',
+      //     title: 'Inspire',
+      //     to: '/login'
+      //   }
+      // ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js'
+    }
+  },
+  methods: {
+    logout(){
+      this.$store.dispatch('user/logOutUser')
+      this.$router.push('/login')
     }
   }
 }

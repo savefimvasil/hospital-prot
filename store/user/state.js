@@ -1,5 +1,5 @@
 export default () => ({
-  user: {},
+  user: null,
   isLogin: false,
   isAdmin: false,
   menuItems: []

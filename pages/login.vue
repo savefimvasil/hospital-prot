@@ -1,6 +1,7 @@
 <template>
   <div>
     <Login></Login>
+    {{loading}}
   </div>
 </template>
 
@@ -10,6 +11,11 @@ export default {
   name: 'login',
   components: {
     Login
+  },
+  computed: {
+    loading() {
+      return this.$store.state.loading.loading
+    }
   }
 }
 </script>

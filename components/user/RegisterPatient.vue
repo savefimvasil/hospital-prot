@@ -43,6 +43,7 @@
         label="Електрона адреса"
         required
       />
+    {{email}}
       <v-text-field
         v-model="password"
         :rules="passwordRules"
@@ -58,7 +59,7 @@
         required
       />
       <v-btn :disabled="!valid" color="info" :justify-end="true" @click="registerUser">Зареєструватися</v-btn>
-      <nuxt-link to="/">Увійти</nuxt-link>
+      <nuxt-link to="/login">Увійти</nuxt-link>
   </v-form>
 </template>
 
@@ -67,6 +68,7 @@
     name: "RegisterPatient",
     data(vm) {
       return {
+        menu1: false,
         valid: false,
         firstName: '',
         secondName: '',
@@ -120,7 +122,17 @@
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
       },
       registerUser() {
-        this.$router.push('/')
+        let userData = {
+          email: this.email,
+          password: this.password
+        }
+        this.$store.dispatch('user/registerUser', userData)
+          .then(() => {
+            this.$router.push('/')
+          })
+          .catch(error => {
+            alert(error.message)
+          })
       }
     }
   }

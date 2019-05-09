@@ -19,7 +19,7 @@
             label="Пароль"
             required
           />
-          <v-btn :disabled="!valid" color="info" :justify-end="true">Success</v-btn>
+          <v-btn :disabled="!valid" color="info" :justify-end="true" @click="loginUser">Success</v-btn>
           <nuxt-link to="/register">Зареєструватися</nuxt-link>
         </v-flex>
       </v-layout>
@@ -44,6 +44,17 @@
           v => !!v || 'Електрона адреса не повинна бути пустою',
           v => /.+@.+/.test(v) || 'Не вірний формат Електроної адреси'
         ]
+      }
+    },
+    methods: {
+      async loginUser() {
+        let loginData = {
+          email: this.email,
+          password: this.password
+        }
+        await this.$store.dispatch('user/loginUser', loginData)
+        this.$router.push('/')
+
       }
     }
   }
