@@ -1,7 +1,6 @@
 <template>
   <div>
     <Login></Login>
-    {{loading}}
   </div>
 </template>
 

@@ -4,8 +4,8 @@
       <v-layout row wrap align-end class="center">
         <v-flex
           xs12
-          md4
-          offset-md4
+          md6
+          offset-md3
         >
           <v-text-field
             v-model="email"
@@ -19,7 +19,7 @@
             label="Пароль"
             required
           />
-          <v-btn :disabled="!valid" color="info" :justify-end="true" @click="loginUser">Success</v-btn>
+          <v-btn :disabled="!valid" color="info" @click="loginUser">Увійти</v-btn>
           <nuxt-link to="/register">Зареєструватися</nuxt-link>
         </v-flex>
       </v-layout>

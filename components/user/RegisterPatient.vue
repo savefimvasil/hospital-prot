@@ -43,7 +43,6 @@
         label="Електрона адреса"
         required
       />
-    {{email}}
       <v-text-field
         v-model="password"
         :rules="passwordRules"

@@ -3,8 +3,8 @@
     <v-layout row wrap align-end class="center">
       <v-flex
         xs12
-        md4
-        offset-md4
+        md6
+        offset-md3
       >
         <RegisterPatient></RegisterPatient>
       </v-flex>

@@ -1,4 +1,5 @@
 import * as fb from 'firebase'
+import { menuPatient, menuDoctor, menuAdmin } from '../../assets/menuPoints'
 
 class User {
   constructor (id, status = 1) {
@@ -6,6 +7,8 @@ class User {
     this.status = status
   }
 }
+
+const userStatus = 3
 
 export default {
   async registerUser ({commit}, {email, password}) {
@@ -23,7 +26,14 @@ export default {
     commit('loading/setLoading', true)
     try {
       const user = await fb.auth().signInWithEmailAndPassword(email, password)
-      commit('setUser', new User(user.user.uid, 1))
+      commit('setUser', new User(user.user.uid, userStatus))
+      if (userStatus === 1) {
+        commit('setMenuItems', menuPatient)
+      } else if (userStatus === 2) {
+        commit('setMenuItems', menuDoctor)
+      } else if (userStatus === 3) {
+        commit('setMenuItems', menuAdmin)
+      }
       commit('loading/setLoading', false)
     } catch (error) {
       commit('loading/setLoading', false)
@@ -37,6 +47,13 @@ export default {
     commit('loading/setLoading', false)
   },
   autoLogin ({commit}, payload) {
-    commit('setUser', new User(payload.uid, 1))
+    commit('setUser', new User(payload.uid, userStatus))
+    if (userStatus === 1) {
+      commit('setMenuItems', menuPatient)
+    } else if (userStatus === 2) {
+      commit('setMenuItems', menuDoctor)
+    } else if (userStatus === 3) {
+      commit('setMenuItems', menuAdmin)
+    }
   }
 }

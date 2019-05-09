@@ -9,17 +9,17 @@
     >
       <v-list>
 
-        <!--<v-list-tile-->
-          <!--v-for="(item, i) in items"-->
-          <!--:key="i"-->
-          <!--:to="item.to"-->
-          <!--router-->
-          <!--exact-->
-        <!--&gt;-->
-          <!--<v-list-tile-content>-->
-            <!--<v-list-tile-title v-text="item.title" />-->
-          <!--</v-list-tile-content>-->
-        <!--</v-list-tile>-->
+        <v-list-tile
+          v-for="(item, i) in menuItems"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+        >
+          <v-list-tile-content>
+            <v-list-tile-title v-text="item.title" />
+          </v-list-tile-content>
+        </v-list-tile>
 
         <v-list-tile
         v-if="!user"
@@ -71,6 +71,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.user
+    },
+    menuItems() {
+      return this.$store.state.user.menuItems
     }
   },
   data() {
@@ -78,28 +81,14 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      // items: [
-      //   {
-      //     icon: 'apps',
-      //     title: 'Welcome',
-      //     to: '/'
-      //   },
-      //   {
-      //     icon: 'bubble_chart',
-      //     title: 'Inspire',
-      //     to: '/login'
-      //   }
-      // ],
       miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
     }
   },
   methods: {
     logout(){
-      this.$store.dispatch('user/logOutUser')
       this.$router.push('/login')
+      this.$store.dispatch('user/logOutUser')
+      window.location.reload();
     }
   }
 }
