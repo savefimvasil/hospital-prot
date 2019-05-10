@@ -1,5 +1,9 @@
 export const menuPatient = [
   {
+    title: 'На головну',
+    to: '/'
+  },
+  {
     title: 'Особистий кабінет',
     to: '/profile'
   },
@@ -10,6 +14,10 @@ export const menuPatient = [
 ]
 
 export const menuDoctor = [
+  {
+    title: 'На головну',
+    to: '/'
+  },
   {
     title: 'Особистий кабінет',
     to: '/profile'
@@ -22,11 +30,15 @@ export const menuDoctor = [
 
 export const menuAdmin = [
   {
+    title: 'На головну',
+    to: '/'
+  },
+  {
     title: 'Особистий кабінет',
     to: '/profile'
   },
   {
-    title: 'штат співробітників',
+    title: 'Штат співробітників',
     to: '/staff'
   },
   {

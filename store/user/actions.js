@@ -8,7 +8,7 @@ class User {
   }
 }
 
-const userStatus = 3
+const userStatus = 1
 
 export default {
   async registerUser ({commit}, {email, password}) {
@@ -16,14 +16,13 @@ export default {
     try {
       const user = await fb.auth().createUserWithEmailAndPassword(email, password)
       commit('setUser', new User(user.user.uid))
-      commit('loading/setLoading', false)
+      commit('../loading/setLoading', false)
     } catch (error) {
-      commit('loading/setLoading', false)
+      commit('../loading/setLoading', false)
       throw error
     }
   },
   async loginUser ({commit}, {email, password}) {
-    commit('loading/setLoading', true)
     try {
       const user = await fb.auth().signInWithEmailAndPassword(email, password)
       commit('setUser', new User(user.user.uid, userStatus))
@@ -34,9 +33,7 @@ export default {
       } else if (userStatus === 3) {
         commit('setMenuItems', menuAdmin)
       }
-      commit('loading/setLoading', false)
     } catch (error) {
-      commit('loading/setLoading', false)
       throw error
     }
   },
@@ -44,7 +41,7 @@ export default {
     commit('loading/setLoading', true)
     await fb.auth().signOut()
     commit('setUser', null)
-    commit('loading/setLoading', false)
+    commit('../loading/setLoading', false)
   },
   autoLogin ({commit}, payload) {
     commit('setUser', new User(payload.uid, userStatus))
