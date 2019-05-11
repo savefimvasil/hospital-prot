@@ -2,17 +2,21 @@
   <v-form v-model="valid">
     <h2>Реєстрація пацієнта</h2>
     <v-text-field
-        v-model="firstName"
-        :rules="nameRules"
-        label="Ім'я"
-        required
-      />
-      <v-text-field
-        v-model="secondName"
-        :rules="nameRules"
-        label="Прізвище"
-        required
-      />
+      v-model="firstName"
+      :rules="nameRules"
+      label="Ім'я"
+      required
+    />
+    <v-text-field
+      v-model="secondName"
+      :rules="nameRules"
+      label="Прізвище"
+      required
+    />
+    <v-radio-group v-model="gender" row>
+      <v-radio label="Чоловічий" value="male"></v-radio>
+      <v-radio label="Жіночий" value="female"></v-radio>
+    </v-radio-group>
       <v-menu
         ref="menu1"
         v-model="menu1"
@@ -44,6 +48,12 @@
         required
       />
       <v-text-field
+        v-model="phone"
+        :rules="phoneRules"
+        label="Номер телефону"
+        required
+      />
+      <v-text-field
         v-model="password"
         :rules="passwordRules"
         label="Пароль"
@@ -71,6 +81,7 @@
         valid: false,
         firstName: '',
         secondName: '',
+        gender: 'male',
         nameRules: [
           v => !!v || 'Це поле не повинно бути пустим',
           v => v.length >= 2 || 'Введіть коректне значення',
@@ -93,6 +104,11 @@
         emailRules: [
           v => !!v || 'Електрона адреса не повинна бути пустою',
           v => /.+@.+/.test(v) || 'Не вірний формат Електроної адреси'
+        ],
+        phone: '+380',
+        phoneRules: [
+          v => !!v || 'Номер телефону не повинен бути пустим',
+          v => v.length === 13 || 'Введіть правильний номер телефону'
         ]
       }
     },
@@ -122,7 +138,13 @@
       },
       registerUser() {
         let userData = {
+          status: 1,
+          firstName: this.firstName,
+          secondName: this.secondName,
+          gender: this.gender,
+          birthDate: this.dateFormatted,
           email: this.email,
+          phone: this.phone,
           password: this.password
         }
         this.$store.dispatch('user/registerUser', userData)

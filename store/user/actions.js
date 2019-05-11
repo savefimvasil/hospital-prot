@@ -1,36 +1,69 @@
 import * as fb from 'firebase'
 import { menuPatient, menuDoctor, menuAdmin } from '../../assets/menuPoints'
+import axios from 'axios'
 
 class User {
-  constructor (id, status = 1) {
+  constructor (id, status = 1, email, userInfo) {
     this.id = id
     this.status = status
+    this.email = email
+    this.userInfo = userInfo
   }
 }
 
-const userStatus = 1
-
 export default {
-  async registerUser ({commit}, {email, password}) {
-    commit('loading/setLoading', true)
+  async registerUser ({commit}, userData) {
     try {
-      const user = await fb.auth().createUserWithEmailAndPassword(email, password)
-      commit('setUser', new User(user.user.uid))
-      commit('../loading/setLoading', false)
+      let url = 'http://localhost:4000/patient/add'
+      await axios.post(url, userData).then(() => {
+        console.log('success')
+      });
+      const user = await fb.auth().createUserWithEmailAndPassword(userData.email, userData.password)
+      commit('setUser', new User(user.user.uid, 1, userData.email))
     } catch (error) {
-      commit('../loading/setLoading', false)
+      console.log(error)
+      throw error
+    }
+  },
+  async registerDoctor ({commit, dispatch, router}, userData) {
+    let url = `http://localhost:4000/doctor/findUser/${userData.store.email}`
+    let user
+    await axios.get(url).then((response) => {
+      user = response.data;
+    });
+    try {
+      let url = 'http://localhost:4000/doctor/add'
+      await axios.post(url, userData).then(() => {
+        console.log('success')
+      });
+      await fb.auth().createUserWithEmailAndPassword(userData.email, userData.password)
+      dispatch('logOutUser')
+      dispatch('loginUser', user[0])
+    } catch (error) {
+      console.log(error)
       throw error
     }
   },
   async loginUser ({commit}, {email, password}) {
+    let url = `http://localhost:4000/patient/findUser/${email}`
+    let userData
+    await axios.get(url).then((response) => {
+      userData = response.data;
+    });
+    if (userData.length === 0) {
+      url = `http://localhost:4000/doctor/findUser/${email}`
+      await axios.get(url).then((response) => {
+        userData = response.data;
+      });
+    }
     try {
       const user = await fb.auth().signInWithEmailAndPassword(email, password)
-      commit('setUser', new User(user.user.uid, userStatus))
-      if (userStatus === 1) {
+      commit('setUser', new User(user.user.uid, userData[0].status, email))
+      if (userData[0].status == 1) {
         commit('setMenuItems', menuPatient)
-      } else if (userStatus === 2) {
+      } else if (userData[0].status == 2) {
         commit('setMenuItems', menuDoctor)
-      } else if (userStatus === 3) {
+      } else if (userData[0].status == 3) {
         commit('setMenuItems', menuAdmin)
       }
     } catch (error) {
@@ -38,18 +71,28 @@ export default {
     }
   },
   async logOutUser ({commit}) {
-    commit('loading/setLoading', true)
     await fb.auth().signOut()
     commit('setUser', null)
-    commit('../loading/setLoading', false)
   },
-  autoLogin ({commit}, payload) {
-    commit('setUser', new User(payload.uid, userStatus))
-    if (userStatus === 1) {
+  async autoLogin ({commit}, payload) {
+    let url = `http://localhost:4000/patient/findUser/${payload.email}`
+    let userData
+    await axios.get(url).then((response) => {
+      userData = response.data;
+    });
+    if (userData.length === 0) {
+      url = `http://localhost:4000/doctor/findUser/${payload.email}`
+      await axios.get(url).then((response) => {
+        userData = response.data;
+      });
+    }
+    commit('setUserInfo', userData[0])
+    commit('setUser', new User(payload.uid, userData.status, payload.email))
+    if (userData[0].status == 1) {
       commit('setMenuItems', menuPatient)
-    } else if (userStatus === 2) {
+    } else if (userData[0].status == 2) {
       commit('setMenuItems', menuDoctor)
-    } else if (userStatus === 3) {
+    } else if (userData[0].status == 3) {
       commit('setMenuItems', menuAdmin)
     }
   }

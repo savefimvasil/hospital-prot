@@ -6,16 +6,17 @@
         md6
         offset-md3
       >
-        <h1>Редагування штату співробітників</h1>
-        <v-btn class="w-100" to="/staff/add" color="normal">Додати лікаря</v-btn>
+        <RegisterDoctor />
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+    import RegisterDoctor from "../../components/user/RegisterDoctor";
     export default {
-        name: "index"
+        name: "add",
+      components: {RegisterDoctor}
     }
 </script>
 

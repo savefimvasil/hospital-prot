@@ -18,6 +18,7 @@
             :rules="passwordRules"
             label="Пароль"
             required
+            type="password"
           />
           <v-btn :disabled="!valid" color="info" @click="loginUser">Увійти</v-btn>
           <nuxt-link to="/register">Зареєструватися</nuxt-link>

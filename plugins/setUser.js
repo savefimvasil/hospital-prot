@@ -2,9 +2,9 @@ import firebase from 'firebase';
 
 export default async function({ store, route, redirect }) {
   store.dispatch('loading/setLoading', true)
-  await firebase.auth().onAuthStateChanged(user => {
+  await firebase.auth().onAuthStateChanged(async user => {
     if (user) {
-      store.dispatch('user/autoLogin', user)
+      await store.dispatch('user/autoLogin', user)
       store.dispatch('loading/setLoading', false)
     }
     user !== null && route.name === 'login' ? redirect('/') : ''
