@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "big-integer": "^1.6.43",
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "firebase": "^6.0.1",

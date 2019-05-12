@@ -2,6 +2,8 @@ import * as fb from 'firebase'
 import { menuPatient, menuDoctor, menuAdmin } from '../../assets/menuPoints'
 import axios from 'axios'
 
+import {cons} from '@/static/encrypt.js'
+
 class User {
   constructor (id, status = 1, email, userInfo) {
     this.id = id
@@ -75,6 +77,7 @@ export default {
     commit('setUser', null)
   },
   async autoLogin ({commit}, payload) {
+    cons()
     let url = `http://localhost:4000/patient/findUser/${payload.email}`
     let userData
     await axios.get(url).then((response) => {
