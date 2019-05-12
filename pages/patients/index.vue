@@ -19,6 +19,7 @@
           <td class="text-xs-left">{{ props.item.firstName }}</td>
           <td class="text-xs-left">{{ props.item.birthDate }}</td>
           <td class="text-xs-left">{{ props.item.gender }}</td>
+          <td class="text-xs-left"><v-btn :to="'/diseases/' + props.item._id" flat small primary>Історія захворювань</v-btn></td>
         </template>
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -45,6 +46,7 @@
         { text: "Ім'я", value: 'firstName' },
         { text: 'Дата народження', value: 'birthDate' },
         { text: 'Пол', value: 'gender' },
+        { text: 'Історія захворювань', value: '' }
       ],
       desserts: [],
       editedIndex: -1
@@ -79,11 +81,9 @@
       },
 
       closeDialog(payload) {
-        console.log(payload)
         this.dialog = payload
       },
       editItem (item) {
-        console.log(item)
         this.editedIndex = this.desserts.indexOf(item)
         this.dialog = true
       },

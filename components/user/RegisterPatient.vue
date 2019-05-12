@@ -45,7 +45,6 @@
         :items="doctorList[0]"
         v-model="doctor"
       ></v-select>
-      {{doctor}}
       <v-text-field
         v-model="email"
         :rules="emailRules"

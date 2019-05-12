@@ -1,6 +1,5 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px" v-if="dialog">
-
     <v-card>
       <v-card-title>
         <span class="headline">Редагування даних користувача и</span>
@@ -106,6 +105,11 @@
     watch: {
       date (val) {
         this.dateFormatted = this.formatDate(this.date)
+      },
+      dialog() {
+        if(this.dialog === false) {
+          this.$emit('input', false)
+        }
       }
     },
     props: ['editedData'],

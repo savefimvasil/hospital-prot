@@ -91,11 +91,9 @@
         })
       },
       closeDialog(payload) {
-        console.log(payload)
         this.dialog = payload
       },
       editItem (item) {
-        console.log(item)
         this.editedIndex = this.desserts.indexOf(item)
         this.dialog = true
       },

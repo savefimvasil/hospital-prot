@@ -6,10 +6,6 @@ export const menuPatient = [
   {
     title: 'Особистий кабінет',
     to: '/profile'
-  },
-  {
-    title: 'Захворювання',
-    to: '/diseases'
   }
 ]
 
