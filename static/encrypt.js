@@ -3,14 +3,19 @@ import { messageDecrypted, messageDecoded } from './decrypt'
 import bigInt from 'big-integer'
 
 export async function crypto() {
-  let txt = trans("Съешь");
-  // trans(txt)
+  let txt = trans("папапапапапапапапапапапа");
   let p = getP()
   let g = getG()
   let x = getX(p)
   let y = getY(p, g, x)
   let k = getK(p)
   let alfa = getAlfa(k, g, p)
+
+  let bits = getBits()
+
+  let bit = bits / 8 - 1
+
+  console.log(txt.match(/.{1,7}/g));
 
   console.log(alfa)
 
@@ -24,7 +29,7 @@ export async function crypto() {
 
   let decoded = messageDecoded(decrypted)
 
-  console.log(decoded)
+  console.log(trans(decoded, true))
 }
 
 export function getBits() {
