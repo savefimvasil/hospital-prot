@@ -25,6 +25,23 @@ postRoutes.route('/').get(function (req, res) {
   });
 });
 
+postRoutes.route('/getUsersByDocId/:id').get(function (req, res) {
+  Post.find(function(err, posts){
+    if(err){
+      res.json(err);
+    }
+    else {
+      let postList = []
+      for (let key in posts) {
+        if (posts[key].doctor === req.params.id) {
+          postList.push(posts[key])
+        }
+      }
+      res.json(postList);
+    }
+  });
+});
+
 postRoutes.route('/findUser/:id').get(function (req, res) {
   let id = req.params.id;
   Post.find({email: id}, function (err, post){

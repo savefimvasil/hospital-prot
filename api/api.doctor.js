@@ -20,8 +20,24 @@ postRoutes.route('/').get(function (req, res) {
       res.json(err);
     }
     else {
-      res.json(posts);
+      let postList = []
+      for (let post in posts) {
+        if (posts[post].status === '2') {
+          postList.push(posts[post])
+        }
+      }
+      res.json(postList);
     }
+  });
+});
+
+postRoutes.route('/findById/:id').get(function (req, res) {
+  let id = req.params.id;
+  Post.findById(id, function (err, post){
+    if(err) {
+      res.json(err);
+    }
+    res.json(post);
   });
 });
 

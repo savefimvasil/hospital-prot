@@ -41,6 +41,11 @@
         </template>
         <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
       </v-menu>
+      <v-select
+        :items="doctorList[0]"
+        v-model="doctor"
+      ></v-select>
+      {{doctor}}
       <v-text-field
         v-model="email"
         :rules="emailRules"
@@ -73,6 +78,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     name: "RegisterPatient",
     data(vm) {
@@ -109,7 +115,9 @@
         phoneRules: [
           v => !!v || 'Номер телефону не повинен бути пустим',
           v => v.length === 13 || 'Введіть правильний номер телефону'
-        ]
+        ],
+        doctorList: [[], []],
+        doctor: ''
       }
     },
     computed: {
@@ -137,6 +145,7 @@
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
       },
       registerUser() {
+        let ind = this.doctorList[0].indexOf(this.doctor)
         let userData = {
           status: 1,
           firstName: this.firstName,
@@ -145,7 +154,8 @@
           birthDate: this.dateFormatted,
           email: this.email,
           phone: this.phone,
-          password: this.password
+          password: this.password,
+          doctor: this.doctorList[1][ind]
         }
         this.$store.dispatch('user/registerUser', userData)
           .then(() => {
@@ -155,6 +165,15 @@
             alert(error.message)
           })
       }
+    },
+    mounted() {
+      let url = `http://localhost:4000/doctor`
+      axios.get(url).then(res => {
+        for(let key in res.data) {
+          this.doctorList[0].push(res.data[key].firstName + ' ' + res.data[key].secondName)
+          this.doctorList[1].push(res.data[key]._id)
+        }
+      })
     }
   }
 </script>

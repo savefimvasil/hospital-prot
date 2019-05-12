@@ -18,6 +18,9 @@ let Post = new Schema({
   birthDate: {
     type: String
   },
+  doctor: {
+    type: String
+  },
   email: {
     type: String
   },
