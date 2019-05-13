@@ -17,8 +17,8 @@ export default {
   async registerUser ({commit}, userData) {
     try {
       let url = 'http://localhost:4000/patient/add'
-      await axios.post(url, userData).then(() => {
-        console.log('success')
+      await axios.post(url, userData).then((res) => {
+        console.log(res.data.business)
       });
       const user = await fb.auth().createUserWithEmailAndPassword(userData.email, userData.password)
       commit('setUser', new User(user.user.uid, 1, userData.email))
@@ -35,7 +35,9 @@ export default {
     });
     try {
       let url = 'http://localhost:4000/doctor/add'
-      await axios.post(url, userData).then(() => {
+      console.log(userData)
+      await axios.post(url, userData).then((response) => {
+        console.log(response.data.business)
         console.log('success')
       });
       await fb.auth().createUserWithEmailAndPassword(userData.email, userData.password)
@@ -77,8 +79,11 @@ export default {
     commit('setUser', null)
   },
   async autoLogin ({commit}, payload) {
-    crypto()
-    // console.log(y)
+    let a = await crypto('папапапапапапапапапапапапапапапапапапапа', 1)
+    console.log(a.message)
+    let dec = await crypto(a.message, 2, a.x, '', '', a.alfa)
+    console.log(dec)
+
     let url = `http://localhost:4000/patient/findUser/${payload.email}`
     let userData
     await axios.get(url).then((response) => {

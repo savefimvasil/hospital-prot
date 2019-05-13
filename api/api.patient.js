@@ -6,8 +6,8 @@ let Post = require('./model.patient');
 postRoutes.route('/add').post(function (req, res) {
   let post = new Post(req.body);
   post.save()
-    .then(() => {
-      res.status(200).json({'business': 'business in added successfully'});
+    .then((response) => {
+      res.status(200).json({'business': response._id});
     })
     .catch(() => {
       res.status(400).send("unable to save to database");

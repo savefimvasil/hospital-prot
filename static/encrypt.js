@@ -2,8 +2,14 @@ import { getAlfa, getG, getK, getP, getX, getY } from "./cryptoConstants";
 import { decrypt } from './decrypt'
 import bigInt from 'big-integer'
 
-export async function crypto(parX, parY, parK, parAlfa) {
-  let txt1 = trans("Cуществуют две основные трактовки понятия «текст»");
+export async function crypto(
+  message = 'Cуществуют две основные трактовки понятия «текст»',
+  mode,
+  parX,
+  parY,
+  parK,
+  parAlfa
+){
   let p = getP()
   let g = getG()
   let x = parX || getX(p)
@@ -11,10 +17,18 @@ export async function crypto(parX, parY, parK, parAlfa) {
   let k = parK || getK(p)
   let alfa = parAlfa || getAlfa(k, g, p)
 
-  let encryptedMessage = encrypt(txt1, y, k ,p)
-
-  let decoded = decrypt(encryptedMessage, alfa, x, p)
-  console.log(trans(decoded, true))
+  if(mode === 1) {
+    message = trans(message);
+    return {
+      message: encrypt(message, y, k, p),
+      y,
+      k,
+      alfa,
+      x
+    }
+  } else if(mode === 2) {
+    return trans(decrypt(message, alfa, x, p), true)
+  }
 }
 
 export function encrypt(text, y, k, p) {
@@ -27,8 +41,8 @@ export function encrypt(text, y, k, p) {
       encStr+= ','
     }
   }
-  let encryptedMessage = encStr.split(',')
-  return encryptedMessage
+  // let encryptedMessage = encStr.split(',')
+  return encStr
 }
 
 export function messageEncrypted(messageEncoded, y, k, p) {

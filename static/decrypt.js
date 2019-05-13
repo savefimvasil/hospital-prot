@@ -32,6 +32,7 @@ export function hexDecode(str) {
 }
 
 export function decrypt(encryptedMessage, alfa, x, p) {
+  encryptedMessage = encryptedMessage.split(',')
   let decoded = ''
   for(let i = 0; i < encryptedMessage.length; i++) {
     let decrypted = messageDecrypted(bigInt(encryptedMessage[i]), alfa, x, p)
