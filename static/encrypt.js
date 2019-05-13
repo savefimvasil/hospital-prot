@@ -1,67 +1,34 @@
-import { groups, selectedGroup } from "./cryptoConstants";
-import { messageDecrypted, messageDecoded } from './decrypt'
+import { getAlfa, getG, getK, getP, getX, getY } from "./cryptoConstants";
+import { decrypt } from './decrypt'
 import bigInt from 'big-integer'
 
-export async function crypto() {
-  let txt = trans("папапапапапапапапапапапа");
+export async function crypto(parX, parY, parK, parAlfa) {
+  let txt1 = trans("Cуществуют две основные трактовки понятия «текст»");
   let p = getP()
   let g = getG()
-  let x = getX(p)
-  let y = getY(p, g, x)
-  let k = getK(p)
-  let alfa = getAlfa(k, g, p)
+  let x = parX || getX(p)
+  let y = parY || getY(p, g, x)
+  let k = parK || getK(p)
+  let alfa = parAlfa || getAlfa(k, g, p)
 
-  let bits = getBits()
+  let encryptedMessage = encrypt(txt1, y, k ,p)
 
-  let bit = bits / 8 - 1
-
-  console.log(txt.match(/.{1,7}/g));
-
-  console.log(alfa)
-
-  let mess = messageEncoded(txt)
-
-  let encrypted = messageEncrypted(mess, y, k, p)
-
-  console.log(encrypted)
-
-  let decrypted = messageDecrypted(encrypted, alfa, x, p)
-
-  let decoded = messageDecoded(decrypted)
-
+  let decoded = decrypt(encryptedMessage, alfa, x, p)
   console.log(trans(decoded, true))
 }
 
-export function getBits() {
-  return groups[selectedGroup].bits
-}
-
-export function getP() {
-  return groups[selectedGroup].p
-}
-
-export function getG() {
-  return groups[selectedGroup].g
-}
-
-export function getX(p) {
-  return bigInt.randBetween(p.divide(10), p);
-}
-
-export function getY(p, g, x) {
-  return bigInt(g).modPow(x, p);
-}
-
-export function getK(p) {
-  let k = bigInt.randBetween(p.divide(10), p);
-  return k
-}
-
-export function getAlfa(k, g, p) {
-  if (k) {
-    return g.modPow(k, p);
+export function encrypt(text, y, k, p) {
+  let encrypted = []
+  let encStr = ''
+  for(let i = 0; i < text.length; i++) {
+    let mess = messageEncoded(text[i])
+    encStr += (messageEncrypted(mess, y, k, p).value)
+    if(i + 1 !== text.length) {
+      encStr+= ','
+    }
   }
-  return 'Создайте временный ключ';
+  let encryptedMessage = encStr.split(',')
+  return encryptedMessage
 }
 
 export function messageEncrypted(messageEncoded, y, k, p) {
@@ -93,17 +60,17 @@ export function hexEncode(str) {
   return result;
 }
 
-let rus = "щ   ш  ч  ц  ю  я  ё  ж  ъ  ы  э  а б в г д е з и й к л м н о п р с т у ф х ь".split(/ +/g),
-  eng = "shh sh ch cz yu ya yo zh `` y' e` a b v g d e z i j k l m n o p r s t u f x `".split(/ +/g)
-;
+let rus = "  щ   ш  ч  ц  ю  я  ё  ж  ъ  ы  э  а б в г д е з и й к л м н о п р с т у ф х ь".split(/ +/g),
+  eng = "  shh sh ch cz yu ya yo zh `` y' e` a b v g d e z i j k l m n o p r s t u f x `".split(/ +/g)
+
 function trans(text, engToRus) {
   var x;
   for(x = 0; x < rus.length; x++) {
     text = text.split(engToRus ? eng[x] : rus[x]).join(engToRus ? rus[x] : eng[x]);
     text = text.split(engToRus ? eng[x].toUpperCase() : rus[x].toUpperCase()).join(engToRus ? rus[x].toUpperCase() : eng[x].toUpperCase());
   }
-  return text;
+  if(engToRus) {
+    return text
+  }
+  return text.match(/.{1,7}/g)
 }
-
-
-

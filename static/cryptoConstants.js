@@ -43,10 +43,22 @@ export function getG() {
   return groups[selectedGroup].g
 }
 
-export function getX() {
-  return bigInt.randBetween(getP().divide(10), getP());
+export function getX(p) {
+  return bigInt.randBetween(p.divide(10), p);
 }
 
-export function getY() {
-  return bigInt(getG()).modPow(getX(), getP());
+export function getY(p, g, x) {
+  return bigInt(g).modPow(x, p);
+}
+
+export function getK(p) {
+  let k = bigInt.randBetween(p.divide(10), p);
+  return k
+}
+
+export function getAlfa(k, g, p) {
+  if (k) {
+    return g.modPow(k, p);
+  }
+  return 'Создайте временный ключ';
 }

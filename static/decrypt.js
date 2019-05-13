@@ -30,3 +30,12 @@ export function hexDecode(str) {
   }
   return result;
 }
+
+export function decrypt(encryptedMessage, alfa, x, p) {
+  let decoded = ''
+  for(let i = 0; i < encryptedMessage.length; i++) {
+    let decrypted = messageDecrypted(bigInt(encryptedMessage[i]), alfa, x, p)
+    decoded += messageDecoded(decrypted)
+  }
+  return decoded
+}
