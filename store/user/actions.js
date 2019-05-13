@@ -123,9 +123,7 @@ export default {
   },
   async autoLogin ({commit}, payload) {
     let a = await crypto('папапапапапапапапапапапапапапапапапапапа', 1)
-    console.log(a.message)
     let dec = await crypto(a.message, 2, a.x, '', '', a.alfa)
-    console.log(dec)
 
     let url = `http://localhost:4000/patient/findUser/${payload.email}`
     let userData

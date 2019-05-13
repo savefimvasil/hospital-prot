@@ -22,7 +22,7 @@ postRoutes.route('/:id').get(function (req, res) {
     else {
       let postList = []
       for (let post in posts) {
-        if (posts[post].userId  === req.params.id) {
+        if (posts[post].id  === req.params.id) {
           postList.push(posts[post])
         }
       }

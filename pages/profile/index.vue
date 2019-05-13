@@ -58,7 +58,6 @@
         this.dialog = true
       },
       closeDialog(payload) {
-        console.log(payload)
         this.dialog = payload
       }
     }

@@ -96,6 +96,7 @@
 <script>
   import axios from 'axios'
   import * as fb from 'firebase'
+  import { crypto } from '../../static/encrypt'
   export default {
     name: "EditUser",
     watch: {
@@ -113,14 +114,17 @@
         this.dialog = false
       },
       async save () {
+        let diagnosis = await Promise.resolve(crypto(this.diagnosis, 1, this.crypto.x, this.crypto.y, this.crypto.k, this.crypto.alfa))
+        let descr = await Promise.resolve(crypto(this.description, 1, this.crypto.x, this.crypto.y, this.crypto.k, this.crypto.alfa))
+        let treatment = await Promise.resolve(crypto(this.treatment, 1, this.crypto.x, this.crypto.y, this.crypto.k, this.crypto.alfa))
+        let date = await Promise.resolve(crypto(this.dateFormatted, 1, this.crypto.x, this.crypto.y, this.crypto.k, this.crypto.alfa))
         let data = {
           userId: this.$route.params.id,
-          diagnosis: this.diagnosis,
-          description: this.description,
-          treatment: this.treatment,
-          date: this.dateFormatted
+          diagnosis: diagnosis.message,
+          description: descr.message,
+          treatment: treatment.message,
+          date: date.message
         }
-
         let url = `http://localhost:4000/diseases/add`
         await axios.post(url, data).then(() => {
           console.log('success')
@@ -141,9 +145,22 @@
       },
     },
     async mounted() {
+      await axios.get(`http://localhost:4000/crypto/${this.$route.params.id}`).then(res => {
+        this.crypto = res.data[0]
+      })
       let url = `http://localhost:4000/diseases/${this.$route.params.id}`
-      await axios.get(url).then((response) => {
+      await axios.get(url).then(async (response) => {
         this.desserts = response.data;
+        for(let key in this.desserts) {
+          this.desserts[key].diagnosis =
+            await Promise.resolve(crypto(this.desserts[key].diagnosis, 2, this.crypto.x, this.crypto.y, this.crypto.k, this.crypto.alfa))
+          this.desserts[key].description =
+            await Promise.resolve(crypto(this.desserts[key].description, 2, this.crypto.x, this.crypto.y, this.crypto.k,  this.crypto.alfa))
+          this.desserts[key].date =
+            await Promise.resolve(crypto(this.desserts[key].date, 2, this.crypto.x, this.crypto.y, this.crypto.k,  this.crypto.alfa))
+          this.desserts[key].treatment =
+            await Promise.resolve(crypto(this.desserts[key].treatment, 2, this.crypto.x, this.crypto.y, this.crypto.k,  this.crypto.alfa))
+        }
       });
     },
     data () {
