@@ -1,6 +1,7 @@
 import * as fb from 'firebase'
 import { menuPatient, menuDoctor, menuAdmin } from '../../assets/menuPoints'
 import axios from 'axios'
+import { getY, getX, getP, getK, getG, getBits, getAlfa} from '../../static/cryptoConstants'
 
 import {crypto} from '@/static/encrypt.js'
 
@@ -15,13 +16,34 @@ class User {
 
 export default {
   async registerUser ({commit}, userData) {
+
     try {
       let url = 'http://localhost:4000/patient/add'
-      await axios.post(url, userData).then((res) => {
-        console.log(res.data.business)
+
+      await axios.post(url, userData).then(async (response) => {
+        let url = 'http://localhost:4000/crypto/add'
+        let p = getP()
+        let g = getG()
+        let x = getX(p)
+        let y = getY(p, g, x)
+        let k = getK(p)
+        let alfa = getAlfa(k, g, p)
+        let CryptoData = {
+          id: response.data.business,
+          x: x,
+          y: y,
+          k: k,
+          alfa: alfa
+        }
+
+        await axios.post(url, CryptoData).then(() => {
+          console.log('success')
+        })
       });
+
       const user = await fb.auth().createUserWithEmailAndPassword(userData.email, userData.password)
       commit('setUser', new User(user.user.uid, 1, userData.email))
+
     } catch (error) {
       console.log(error)
       throw error
@@ -30,19 +52,40 @@ export default {
   async registerDoctor ({commit, dispatch, router}, userData) {
     let url = `http://localhost:4000/doctor/findUser/${userData.store.email}`
     let user
+
     await axios.get(url).then((response) => {
       user = response.data;
     });
+
     try {
       let url = 'http://localhost:4000/doctor/add'
-      console.log(userData)
-      await axios.post(url, userData).then((response) => {
-        console.log(response.data.business)
-        console.log('success')
+
+      await axios.post(url, userData).then(async (response) => {
+        let url = 'http://localhost:4000/crypto/add'
+        let p = getP()
+        let g = getG()
+        let x = getX(p)
+        let y = getY(p, g, x)
+        let k = getK(p)
+        let alfa = getAlfa(k, g, p)
+        let CryptoData = {
+          id: response.data.business,
+          x: x,
+          y: y,
+          k: k,
+          alfa: alfa
+        }
+
+        await axios.post(url, CryptoData).then(() => {
+          console.log('success')
+        })
       });
+
       await fb.auth().createUserWithEmailAndPassword(userData.email, userData.password)
+
       dispatch('logOutUser')
       dispatch('loginUser', user[0])
+
     } catch (error) {
       console.log(error)
       throw error

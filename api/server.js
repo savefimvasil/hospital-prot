@@ -8,6 +8,7 @@ const config = require('./DB.js');
 const routePatient = require('./api.patient');
 const routeDoctor = require('./api.doctor');
 const routeDiseases = require('./api.diseases');
+const routeCrypto = require('./api.crypto');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use('/patient', routePatient);
 app.use('/doctor', routeDoctor);
 app.use('/diseases', routeDiseases);
+app.use('/crypto', routeCrypto);
 
 app.listen(PORT, function(){
   console.log('Server is running on Port:',PORT);
