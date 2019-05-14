@@ -22,8 +22,8 @@
                 required
               />
               <v-radio-group v-model="editedDataGender" row>
-                <v-radio label="Чоловічий" value="male"></v-radio>
-                <v-radio label="Жіночий" value="female"></v-radio>
+                <v-radio label="Чоловічий" value="мужской"></v-radio>
+                <v-radio label="Жіночий" value="женский"></v-radio>
               </v-radio-group>
               <v-menu
                 ref="menu1"

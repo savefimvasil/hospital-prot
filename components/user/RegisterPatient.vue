@@ -77,6 +77,7 @@
 </template>
 
 <script>
+  import {crypto} from "../../static/encrypt";
   import axios from 'axios'
   export default {
     name: "RegisterPatient",
@@ -167,9 +168,15 @@
     },
     mounted() {
       let url = `http://localhost:4000/doctor`
-      axios.get(url).then(res => {
+      axios.get(url).then(async res => {
         for(let key in res.data) {
-          this.doctorList[0].push(res.data[key].firstName + ' ' + res.data[key].secondName)
+          let cryptos = await axios.get(`http://localhost:4000/crypto/${res.data[key]._id}`)
+          console.log(cryptos.data[0])
+          let firstName =
+            await Promise.resolve(crypto(res.data[key].firstName, 2, cryptos.data[0].x, cryptos.data[0].y, cryptos.data[0].k, cryptos.data[0].alfa))
+          let secondName =
+            await Promise.resolve(crypto(res.data[key].secondName, 2, cryptos.data[0].x, cryptos.data[0].y, cryptos.data[0].k, cryptos.data[0].alfa))
+          this.doctorList[0].push(firstName + ' ' + secondName)
           this.doctorList[1].push(res.data[key]._id)
         }
       })
