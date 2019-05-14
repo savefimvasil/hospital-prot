@@ -30,9 +30,9 @@
         </v-card-actions>
       </v-card>
 
-        <div v-if="dialog === true">
-          <edit-user @input="closeDialog" :editedData="userInfo"/>
-        </div>
+      <div v-if="dialog === true">
+        <edit-user @input="closeDialog" :editedData="userInfo"/>
+      </div>
     </v-flex>
   </v-layout>
 </template>
@@ -65,5 +65,4 @@
 </script>
 
 <style scoped>
-
 </style>

@@ -37,10 +37,13 @@
 <script>
   import axios from 'axios'
   import EditUser from "../../components/user/EditUser";
+  import {crypto} from "../../static/encrypt";
+
   export default {
     components: {EditUser},
     data: () => ({
       dialog: false,
+      cryptos: null,
       headers: [
         { text: 'Прізвище', value: 'secondName' },
         { text: "Ім'я", value: 'firstName' },
@@ -69,8 +72,27 @@
       async initialize () {
         if (this.userInfo.status === '3') {
           let url = `http://localhost:4000/patient`
-          await axios.get(url).then(res => {
+          await axios.get(url).then(async res => {
             this.desserts = res.data
+            for (let key in this.desserts) {
+              await axios.get(`http://localhost:4000/crypto/${this.desserts[key]._id}`).then(async res => {
+                this.cryptos = res.data[0]
+
+                let firstName = await Promise.resolve(crypto(this.desserts[key].firstName, 2, this.cryptos.x, this.cryptos.y, this.cryptos.k, this.cryptos.alfa))
+                let secondName = await Promise.resolve(crypto(this.desserts[key].secondName, 2, this.cryptos.x, this.cryptos.y, this.cryptos.k, this.cryptos.alfa))
+                let password = await Promise.resolve(crypto(this.desserts[key].password, 2, this.cryptos.x, this.cryptos.y, this.cryptos.k, this.cryptos.alfa))
+                let gender = await Promise.resolve(crypto(this.desserts[key].gender, 2, this.cryptos.x, this.cryptos.y, this.cryptos.k, this.cryptos.alfa))
+                let birthDate = await Promise.resolve(crypto(this.desserts[key].birthDate, 2, this.cryptos.x, this.cryptos.y, this.cryptos.k, this.cryptos.alfa))
+                let phone = await Promise.resolve(crypto(this.desserts[key].phone, 2, this.cryptos.x, this.cryptos.y, this.cryptos.k, this.cryptos.alfa))
+
+                this.desserts[key].firstName = firstName
+                this.desserts[key].secondName = secondName
+                this.desserts[key].password = password
+                this.desserts[key].gender = gender
+                this.desserts[key].birthDate = birthDate
+                this.desserts[key].phone = phone
+              })
+            }
           })
         } else {
           let url = `http://localhost:4000/patient/getUsersByDocId/${this.userInfo._id}`

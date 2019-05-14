@@ -14,8 +14,8 @@
       required
     />
     <v-radio-group v-model="gender" row>
-      <v-radio label="Чоловічий" value="male"></v-radio>
-      <v-radio label="Жіночий" value="female"></v-radio>
+      <v-radio label="Чоловічий" value="мужской"></v-radio>
+      <v-radio label="Жіночий" value="женский"></v-radio>
     </v-radio-group>
     <v-menu
       ref="menu1"
@@ -88,7 +88,7 @@
         valid: false,
         firstName: '',
         secondName: '',
-        gender: 'male',
+        gender: 'мужской',
         category: 'Друга',
         items: ['Друга', 'Перша', 'Вища'],
         profession: 'Стоматолог',

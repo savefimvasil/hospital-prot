@@ -14,8 +14,8 @@
       required
     />
     <v-radio-group v-model="gender" row>
-      <v-radio label="Чоловічий" value="male"></v-radio>
-      <v-radio label="Жіночий" value="female"></v-radio>
+      <v-radio label="Чоловічий" value="мужской"></v-radio>
+      <v-radio label="Жіночий" value="женский"></v-radio>
     </v-radio-group>
       <v-menu
         ref="menu1"
@@ -86,7 +86,7 @@
         valid: false,
         firstName: '',
         secondName: '',
-        gender: 'male',
+        gender: 'мужской',
         nameRules: [
           v => !!v || 'Це поле не повинно бути пустим',
           v => v.length >= 2 || 'Введіть коректне значення',

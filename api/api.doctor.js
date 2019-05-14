@@ -51,6 +51,16 @@ postRoutes.route('/findUser/:id').get(function (req, res) {
   });
 });
 
+postRoutes.route('/findUserById/:id').get(function (req, res) {
+  let id = req.params.id;
+  Post.findById(id, function (err, post){
+    if(err) {
+      res.json(err);
+    }
+    res.json(post);
+  });
+});
+
 postRoutes.route('/update/:id').post(function (req, res) {
   Post.findById(req.params.id, function(err, post) {
     if (!post)
@@ -64,6 +74,7 @@ postRoutes.route('/update/:id').post(function (req, res) {
       post.phone = req.body.phone
       post.category = req.body.category
       post.profession = req.body.profession
+      post.password = req.body.password
 
       post.save().then(() => {
         res.json('Update complete');
